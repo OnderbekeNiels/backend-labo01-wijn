@@ -9,7 +9,7 @@ using backend_labo01_wijn.Models;
 namespace backend_labo01_wijn.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class WineController : ControllerBase
     {
 
@@ -38,9 +38,62 @@ namespace backend_labo01_wijn.Controllers
         }
 
         [HttpGet]
-        public List<Wine> GetWines()
+        [Route("wines")]
+        public ActionResult<List<Wine>> GetWines()
         {
-            return _wines;
+            return new OkObjectResult(_wines);
+        }
+
+        [HttpPost]
+        [Route("wines")]
+        public ActionResult<Wine> AddWine(Wine wine)
+        {
+            wine.WineId = _wines.Count + 1;
+            _wines.Add(wine);
+            return new OkObjectResult(wine);
+        }
+
+        [HttpDelete]
+        [Route("wines")]
+        public ActionResult<Wine> RemoveWine(Wine wine)
+        {
+            // We doen dit via een anonieme functie(delegate). Dit is een functie zonder naam die we lokaal
+            // definiëren en meegeven aan de Find. Deze functie zal het gevonden Wine object terugkeren
+            // zodat we dit via Remove kunnen verwijderen.
+            Wine _wine = _wines.Find(delegate (Wine w)
+            {
+                return w.WineId == wine.WineId;
+            });
+
+            if (_wine != null)
+            {
+                _wines.Remove(_wine);
+                return new OkObjectResult(wine);
+            }
+            else
+            {
+                return new StatusCodeResult(404);
+            }
+        }
+
+        [HttpPut]
+        [Route("wines")]
+        public ActionResult<Wine> UpdateWine(Wine wine)
+        {
+            Wine _wine = _wines.Find(delegate (Wine w)
+            {
+                return w.WineId == wine.WineId;
+            });
+
+            if (_wine != null)
+            {
+                _wine.Name = wine.Name;
+                return new OkObjectResult(wine);
+            }
+            else
+            {
+                return new StatusCodeResult(404);
+            }
         }
     }
 }
