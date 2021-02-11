@@ -41,18 +41,51 @@ namespace backend_labo01_wijn.Controllers
         [Route("wines")]
         public ActionResult<List<Wine>> GetWines()
         {
-            return new OkObjectResult(_wines);
+            try
+            {
+                return new OkObjectResult(_wines);
+            }
+            catch (System.Exception ex)
+            {
+                logger.error(ex.Message);
+                return new BadrequestResult();
+            }
+            
+        }
+
+        [HttpGet]
+        [Route("wines/{wineId}")]
+        public ActionResult<Wine> GetWineById(int wineId)
+        {
+            Wine _wine = _wines.Find(w => w.WineId == wineId);
+            if (_wine != null)
+            {
+                return new OkObjectResult(_wine);
+            }
+            else
+            {
+                return new NotFoundResult();
+            }
         }
 
         [HttpPost]
         [Route("wines")]
         public ActionResult<Wine> AddWine(Wine wine)
         {
-            wine.WineId = _wines.Count + 1;
-            _wines.Add(wine);
-            return new OkObjectResult(wine);
+            if (wine == null)
+            {
+                return new BadRequestResult();
+            }
+            else
+            {
+                wine.WineId = _wines.Count + 1;
+                _wines.Add(wine);
+                return new OkObjectResult(wine);
+            }
+
         }
 
+        // !Delete op request body
         [HttpDelete]
         [Route("wines")]
         public ActionResult<Wine> RemoveWine(Wine wine)
@@ -69,6 +102,28 @@ namespace backend_labo01_wijn.Controllers
             {
                 _wines.Remove(_wine);
                 return new OkObjectResult(wine);
+            }
+            else
+            {
+                return new StatusCodeResult(404);
+            }
+        }
+
+
+        // !Delete op ID
+        [HttpDelete]
+        [Route("wines/{wineId}")]
+        public ActionResult<Wine> RemoveWineById(int wineId)
+        {
+            Wine _wine = _wines.Find(delegate (Wine w)
+            {
+                return w.WineId == wineId;
+            });
+
+            if (_wine != null)
+            {
+                _wines.Remove(_wine);
+                return new OkObjectResult(wineId);
             }
             else
             {
