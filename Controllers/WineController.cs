@@ -47,8 +47,7 @@ namespace backend_labo01_wijn.Controllers
             }
             catch (System.Exception ex)
             {
-                logger.error(ex.Message);
-                return new BadrequestResult();
+                return new BadRequestResult();
             }
 
         }
@@ -58,6 +57,7 @@ namespace backend_labo01_wijn.Controllers
         public ActionResult<Wine> GetWineById(int wineId)
         {
             Wine _wine = _wines.Find(w => w.WineId == wineId);
+            // The Where and FirstOrDefault methods are applicable against multiple kinds of sequences, including List<T>, T[], Collection<T>, etc. Any sequence that implements IEnumerable<T> can use these methods. Find is available only for the List<T>. Methods that are generally more applicable, are then more reusable and have a greater impact.
             if (_wine != null)
             {
                 return new OkObjectResult(_wine);
