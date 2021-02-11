@@ -50,7 +50,7 @@ namespace backend_labo01_wijn.Controllers
                 logger.error(ex.Message);
                 return new BadrequestResult();
             }
-            
+
         }
 
         [HttpGet]
@@ -93,6 +93,7 @@ namespace backend_labo01_wijn.Controllers
             // We doen dit via een anonieme functie(delegate). Dit is een functie zonder naam die we lokaal
             // definiëren en meegeven aan de Find. Deze functie zal het gevonden Wine object terugkeren
             // zodat we dit via Remove kunnen verwijderen.
+            // !delegate ga je niet echt nodig hebben gewoon weten dat het bestaat
             Wine _wine = _wines.Find(delegate (Wine w)
             {
                 return w.WineId == wine.WineId;
