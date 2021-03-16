@@ -4,7 +4,7 @@ namespace backend_labo01_wijn.Models
 {
     public class Wine
     {
-        public int WineId { get; set; }
+        public Guid WineId { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
         public string Country { get; set; }

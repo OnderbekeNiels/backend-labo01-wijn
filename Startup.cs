@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using backend_labo01_wijn.Config;
+using backend_labo01_wijn.Data;
+using backend_labo01_wijn.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,7 +30,15 @@ namespace backend_labo01_wijn
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<WineContext>();
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+
             services.AddControllers();
+
+            services.AddTransient<IWineContext, WineContext>();
+            services.AddTransient<IWineRepository, WineRepository>();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "backend_labo01_wijn", Version = "v1" });
